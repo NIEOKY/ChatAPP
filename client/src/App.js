@@ -6,6 +6,7 @@ import Register from './pages/Register';
 
 export default function App() {
   return (
+    //utilizamos browser router para crear rutas utilizando react e importamos todas las paginas o rutas
     <BrowserRouter>
       <Routes>
         <Route path="/register" element={<Register />} />
