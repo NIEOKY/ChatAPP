@@ -34,3 +34,26 @@ module.exports.register = async (req, res, next) => {
     next(error);
   }
 };
+//funcionabilidad del login
+module.exports.login = async (req, res, next) => {
+  try {
+    //primero resibo la request y la convierto en un objeto igual a mi modelo
+    const { username, password } = req.body;
+    //creo una variable para verificar repetidos
+    const usernameCheck = await User.findOne({ username });
+    if (usernameCheck != null) {
+      if (usernameCheck.password === password) {
+        return res.json({ status: true });
+        console.log('entro');
+      } else {
+        return res.json({ msg: 'incorrect user or password', status: false });
+      }
+    } else if (usernameCheck == null) {
+      return res.json({ msg: 'incorrect user or password', status: false });
+      console.log('noentro ');
+    }
+  } catch (error) {
+    //esta funcion es de express y se encarga de trabajar con los errores
+    next(error);
+  }
+};

@@ -21,7 +21,7 @@ function Register() {
     console.log();
     if (handleValidation()) {
       //creamos una cosntante con nuestas variables
-      const { password, confirmpassword, username, email } = values;
+      const { password, username, email } = values;
       //aqui await esperara a que la promesa axios.post de un resultado error or succes]
       //axios.post() crea una post request de manera mas simple
       const { data } = await axios.post(registerRoute, {
@@ -38,7 +38,7 @@ function Register() {
         //esto lo que va a hacer es que guardara el user(algo asi como cache nos servira para que no tenga que ingresar denuevo la info)
         localStorage.setItem('chat-app-user', JSON.stringify(data.user));
       }
-      navigate('/');
+      navigate('/login');
     }
   };
   //este es el mensaje de error

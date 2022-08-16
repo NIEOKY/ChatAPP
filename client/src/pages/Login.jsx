@@ -5,26 +5,31 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'axios';
 import axios from 'axios';
-import { registerRoute } from '../utils/APIRoutes';
+import { loginRoute } from '../utils/APIRoutes';
 
 function Login() {
   const navigate = useNavigate();
-  //creamos los hooks para el inicio de sesion
+  //creamos un usestate hook para almacenar los datos del usuario
   const [values, setValues] = useState({
     username: '',
+
     password: '',
+  });
+  useEffect(() => {
+    if (localStorage.getItem('chat-app-user')) {
+      //navigate('/');
+    }
   });
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log();
     if (handleValidation()) {
       //creamos una cosntante con nuestas variables
-      const { password, confirmpassword, username, email } = values;
+      const { password, username } = values;
       //aqui await esperara a que la promesa axios.post de un resultado error or succes]
       //axios.post() crea una post request de manera mas simple
-      const { data } = await axios.post(registerRoute, {
+      const { data } = await axios.post(loginRoute, {
         username,
-        email,
         password,
       });
       //depende del tipo de status que regrese le damos erro
@@ -39,7 +44,7 @@ function Login() {
       navigate('/');
     }
   };
-  //definimos la toast
+  //este es el mensaje de error
   const toastOptions = {
     position: 'bottom-right',
     autoClose: 8000,
@@ -47,42 +52,39 @@ function Login() {
     theme: 'dark',
     draggable: 'true',
   };
-
   //esta funcion se encargara de varildar si los datos ingresados son validos
   const handleValidation = () => {
     //creamos una copia de tolas las propiedades y les asignamos el valor
     const { password, username } = values;
-    // eslint-disable-next-line no-lone-blocks
-    {
-      if (username.length < 3) {
-        toast.error('username is to short', toastOptions);
-        return false;
-      } else if (password.length < 3) {
-        toast.error('password is to short', toastOptions);
-        return false;
-      }
-      return true;
+    if (username.length < 3) {
+      toast.error('username is to short', toastOptions);
+      return false;
+    } else if (password.length < 3) {
+      toast.error('password is to short', toastOptions);
+      return false;
     }
+    return true;
   };
   const handlechange = (event) => {
     //... crea una copia de values donde vamos a almacenar todos los datos
     //posteriormente [event.target.name] obtendra el nombre o id del formulario que estamos usando
     //y al final utilizando los 2 puntos le decimos a react que relacione el nombre con su id y actualize values
     //por ejemplo si regreso la propiedad nombre le asignaremos el valor nombre:pepe
+    //
 
     setValues({ ...values, [event.target.name]: event.target.value });
   };
   return (
     <>
       <FormContainer>
-        <form /*onSubmit={(event) => handleSubmit(event) }*/>
+        <form onSubmit={(event) => handleSubmit(event)}>
           <div className="name"></div>
           <input
             type="text"
             placeholder="Username"
             name="username"
             onChange={(e) => {
-              //handlechange(e);
+              handlechange(e);
             }}
           ></input>
           <input
@@ -90,12 +92,13 @@ function Login() {
             placeholder="Password"
             name="password"
             onChange={(e) => {
-              // handlechange(e);
+              handlechange(e);
             }}
           ></input>
+
           <button type="submit">Login</button>
           <span>
-            you dont have an account ? <Link to="../register">Register</Link>
+            You dont have an account? <Link to="../register">Login</Link>
           </span>
         </form>
       </FormContainer>
